@@ -41,14 +41,14 @@ app.post('/submit-consultation', async (req, res) => {
         const transporter = nodemailer.createTransporter({
             service: 'gmail',
             auth: {
-                user: 'your-email@gmail.com', // Replace with your email
-                pass: 'your-app-password'     // Replace with your app password
+                user: process.env.EMAIL_USER || 'your-email@gmail.com',
+                pass: process.env.EMAIL_PASSWORD || 'your-app-password'
             }
         });
         
         await transporter.sendMail({
-            from: 'your-email@gmail.com',
-            to: 'admin@purematch.org',
+            from: process.env.EMAIL_USER || 'your-email@gmail.com',
+            to: process.env.ADMIN_EMAIL || 'admin@purematch.org',
             subject: 'New Consultation Request',
             html: `<h3>New Consultation Request</h3>
                    <p><strong>Name:</strong> ${name}</p>
