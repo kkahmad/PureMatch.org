@@ -7,8 +7,8 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.6;
-    color: #2d3e50;
-    background: #fafbfc;
+    color: #1a1a1a;
+    background: linear-gradient(135deg, #f8f7f4, #e8e4d8);
 }
 
 .container {
@@ -19,15 +19,15 @@ body {
 
 /* ========== NAVIGATION ========== */
 nav {
-    background: rgba(255, 255, 255, 0.98);
+    background: linear-gradient(135deg, #1a2e42, #0f1b2e);
     backdrop-filter: blur(10px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
     padding: 15px 0;
-    border-bottom: 1px solid rgba(217, 122, 142, 0.1);
+    border-bottom: 2px solid #E63946;
 }
 
 .nav-container {
@@ -42,7 +42,7 @@ nav {
     gap: 12px;
     font-size: 22px;
     font-weight: 700;
-    color: #2d3e50;
+    color: #ffffff;
     text-decoration: none;
     transition: opacity 0.3s;
 }
@@ -71,7 +71,7 @@ nav {
 
 .nav-links a {
     text-decoration: none;
-    color: #2d3e50;
+    color: #ffffff;
     font-weight: 500;
     font-size: 15px;
     transition: all 0.3s;
@@ -79,7 +79,7 @@ nav {
 }
 
 .nav-links a:hover {
-    color: #D97A8E;
+    color: #FF006E;
 }
 
 .nav-links a::after {
@@ -89,7 +89,7 @@ nav {
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     transition: width 0.3s;
 }
 
@@ -97,13 +97,137 @@ nav {
     width: 100%;
 }
 
+/* ========== NAV CONTACT (WHATSAPP) ========== */
+.nav-contact {
+    display: flex;
+    align-items: center;
+}
+
+.whatsapp-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #00D366;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 211, 102, 0.4);
+}
+
+.whatsapp-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 211, 102, 0.5);
+    background: #00c456;
+}
+
+.whatsapp-icon {
+    width: 18px;
+    height: 18px;
+}
+
 /* ========== HERO SECTION ========== */
 .hero {
     padding: 180px 0 100px;
-    text-align: center;
-    background: linear-gradient(135deg, #fef5f7 0%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #1a2e42 0%, #0f1b2e 100%);
     position: relative;
     overflow: hidden;
+}
+
+.hero-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: left;
+}
+
+.hero-form {
+    position: relative;
+    z-index: 2;
+}
+
+.form-box {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(230, 57, 70, 0.15);
+    border: 2px solid rgba(230, 57, 70, 0.1);
+}
+
+.form-box h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 25px;
+    text-align: center;
+    background: linear-gradient(135deg, #E63946, #FF006E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.form-box .form-group {
+    margin-bottom: 18px;
+}
+
+.form-box input,
+.form-box select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 2px solid #e8e9eb;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.3s;
+    background: #fafbfc;
+}
+
+.form-box input::placeholder {
+    color: #999;
+}
+
+.form-box input:focus,
+.form-box select:focus {
+    outline: none;
+    border-color: #E63946;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+}
+
+.form-submit {
+    width: 100%;
+    background: linear-gradient(135deg, #E63946, #FF006E);
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.3);
+    margin-top: 5px;
+}
+
+.form-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(230, 57, 70, 0.5);
+}
+
+.form-disclaimer {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #888;
 }
 
 .hero-decoration {
@@ -116,7 +240,7 @@ nav {
 .hero-decoration.left {
     width: 400px;
     height: 400px;
-    background: #D97A8E;
+    background: #E63946;
     top: -100px;
     left: -100px;
 }
@@ -124,13 +248,13 @@ nav {
 .hero-decoration.right {
     width: 350px;
     height: 350px;
-    background: #6BA3D6;
+    background: #2E5090;
     bottom: -50px;
     right: -50px;
 }
 
 .free-banner {
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     color: white;
     display: inline-block;
     padding: 12px 28px;
@@ -139,6 +263,7 @@ nav {
     margin-bottom: 30px;
     font-size: 14px;
     animation: float 3s ease-in-out infinite;
+    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.3);
 }
 
 @keyframes float {
@@ -150,12 +275,12 @@ nav {
     font-family: 'Playfair Display', serif;
     font-size: 56px;
     font-weight: 700;
-    margin-bottom: 25px;
+    margin-bffffff 25px;
     color: #2d3e50;
     line-height: 1.2;
 }
 
-.highlight {
+.highlight {FF006E, #00D4FF
     background: linear-gradient(135deg, #D97A8E, #6BA3D6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -164,15 +289,14 @@ nav {
 }
 
 .hero p {
-    font-size: 18px;
+    font-size0e0e018px;
     color: #555;
     max-width: 650px;
-    margin: 0 auto 40px;
+    margin: 0 0 40px;
     line-height: 1.8;
 }
 
-.cta-button {
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+.cta-button {E63946, #FF006E);
     color: white;
     border: none;
     padding: 16px 42px;
@@ -183,11 +307,12 @@ nav {
     transition: all 0.3s;
     display: inline-block;
     text-decoration: none;
-    box-shadow: 0 8px 25px rgba(217, 122, 142, 0.25);
+    box-shadow: 0 8px 25px rgba(230, 57, 70, 0.4);
 }
 
 .cta-button:hover {
     transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(230, 57, 70, 0.
     box-shadow: 0 12px 35px rgba(217, 122, 142, 0.35);
 }
 
@@ -330,9 +455,9 @@ nav {
 .value-card {
     text-align: center;
     padding: 45px 35px;
-    background: linear-gradient(135deg, #fef5f7, #f0f4ff);
+    background: linear-gradient(135deg, #ffffff, #f5f3f0);
     border-radius: 20px;
-    border: 1px solid rgba(217, 122, 142, 0.15);
+    border: 1px solid rgba(230, 57, 70, 0.15);
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
@@ -345,7 +470,7 @@ nav {
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(90deg, #E63946, #FF006E);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s;
@@ -357,7 +482,7 @@ nav {
 
 .value-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(217, 122, 142, 0.15);
+    box-shadow: 0 15px 40px rgba(230, 57, 70, 0.15);
     background: white;
 }
 
@@ -371,7 +496,7 @@ nav {
     font-size: 22px;
     font-weight: 700;
     margin-bottom: 12px;
-    color: #2d3e50;
+    color: #1a1a1a;
 }
 
 .value-card p {
@@ -383,7 +508,7 @@ nav {
 /* ========== COUNSELING SECTION ========== */
 .counseling {
     padding: 100px 0;
-    background: linear-gradient(135deg, #faf9fc 0%, #f8f9ff 100%);
+    background: linear-gradient(135deg, #f0ebe4 0%, #e8ddd0 100%);
 }
 
 .counseling h2 {
@@ -392,7 +517,7 @@ nav {
     font-size: 42px;
     font-weight: 700;
     margin-bottom: 20px;
-    color: #2d3e50;
+    color: #1a1a1a;
 }
 
 .section-subtitle {
@@ -423,24 +548,24 @@ nav {
 }
 
 .counseling-card:nth-child(1) {
-    border-top-color: #D97A8E;
+    border-top-color: #E63946;
 }
 
 .counseling-card:nth-child(2) {
-    border-top-color: #6BA3D6;
+    border-top-color: #FF006E;
 }
 
 .counseling-card:nth-child(3) {
-    border-top-color: #9B6B9D;
+    border-top-color: #2E5090;
 }
 
 .counseling-card:nth-child(4) {
-    border-top-color: #6B9D7A;
+    border-top-color: #00D366;
 }
 
 .card-badge {
     display: inline-block;
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     color: white;
     padding: 6px 14px;
     border-radius: 20px;
@@ -451,14 +576,14 @@ nav {
 
 .counseling-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(217, 122, 142, 0.2);
+    box-shadow: 0 15px 40px rgba(230, 57, 70, 0.2);
 }
 
 .counseling-card h3 {
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 12px;
-    color: #2d3e50;
+    color: #1a1a1a;
 }
 
 .counseling-card p {
@@ -470,7 +595,7 @@ nav {
 /* ========== DEVELOPMENT SECTION ========== */
 .development {
     padding: 100px 0;
-    background: white;
+    background: linear-gradient(135deg, #f8f7f4, #ede8e0);
 }
 
 .development h2 {
@@ -479,7 +604,7 @@ nav {
     font-size: 42px;
     font-weight: 700;
     margin-bottom: 20px;
-    color: #2d3e50;
+    color: #1a1a1a;
 }
 
 .development-grid {
@@ -491,22 +616,22 @@ nav {
 .dev-card {
     text-align: center;
     padding: 40px 30px;
-    background: linear-gradient(135deg, #fef5f7, #f0f4ff);
+    background: linear-gradient(135deg, #ffffff, #f5f3f0);
     border-radius: 18px;
     transition: all 0.3s;
-    border: 1px solid rgba(217, 122, 142, 0.1);
+    border: 1px solid rgba(230, 57, 70, 0.1);
 }
 
 .dev-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(217, 122, 142, 0.15);
+    box-shadow: 0 15px 40px rgba(230, 57, 70, 0.15);
 }
 
 .dev-number {
     font-family: 'Playfair Display', serif;
     font-size: 48px;
     font-weight: 700;
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -517,7 +642,7 @@ nav {
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 12px;
-    color: #2d3e50;
+    color: #1a1a1a;
 }
 
 .dev-card p {
@@ -529,7 +654,7 @@ nav {
 /* ========== FREE CONSULTATION SECTION ========== */
 .free-consultation {
     padding: 80px 0;
-    background: linear-gradient(135deg, #D97A8E15, #6BA3D615);
+    background: linear-gradient(135deg, #E63946 15%, #FF006E 85%);
 }
 
 .consultation-box {
@@ -537,7 +662,7 @@ nav {
     padding: 60px 50px;
     border-radius: 25px;
     text-align: center;
-    box-shadow: 0 20px 50px rgba(217, 122, 142, 0.15);
+    box-shadow: 0 20px 50px rgba(230, 57, 70, 0.25);
     border: 2px solid transparent;
     background-clip: padding-box;
     position: relative;
@@ -550,14 +675,14 @@ nav {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     border-radius: 25px;
     padding: 2px;
     z-index: -1;
 }
 
 .badge {
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     color: white;
     display: inline-block;
     padding: 10px 24px;
@@ -573,11 +698,11 @@ nav {
     font-size: 38px;
     font-weight: 700;
     margin-bottom: 15px;
-    color: #2d3e50;
+    color: #1a1a1a;
 }
 
 .free-highlight {
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -616,7 +741,7 @@ nav {
 }
 
 .claim-button {
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     color: white;
     padding: 16px 44px;
     border: none;
@@ -626,13 +751,13 @@ nav {
     display: inline-block;
     transition: all 0.3s;
     font-size: 16px;
-    box-shadow: 0 8px 25px rgba(217, 122, 142, 0.25);
+    box-shadow: 0 8px 25px rgba(230, 57, 70, 0.25);
     cursor: pointer;
 }
 
 .claim-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(217, 122, 142, 0.35);
+    box-shadow: 0 12px 35px rgba(230, 57, 70, 0.35);
 }
 
 /* ========== CONTACT SECTION ========== */
@@ -656,11 +781,11 @@ nav {
     background: white;
     border-radius: 25px;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(217, 122, 142, 0.15);
+    box-shadow: 0 20px 50px rgba(230, 57, 70, 0.15);
 }
 
 .contact-info {
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     color: white;
     padding: 60px 50px;
     display: flex;
@@ -729,14 +854,14 @@ nav {
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #D97A8E;
+    border-color: #E63946;
     background: white;
-    box-shadow: 0 0 0 3px rgba(217, 122, 142, 0.1);
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
 }
 
 .submit-btn {
     width: 100%;
-    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    background: linear-gradient(135deg, #E63946, #FF006E);
     color: white;
     padding: 16px;
     border: none;
@@ -745,12 +870,12 @@ nav {
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s;
-    box-shadow: 0 8px 25px rgba(217, 122, 142, 0.25);
+    box-shadow: 0 8px 25px rgba(230, 57, 70, 0.25);
 }
 
 .submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(217, 122, 142, 0.35);
+    box-shadow: 0 12px 35px rgba(230, 57, 70, 0.35);
 }
 
 .form-note {
@@ -762,7 +887,7 @@ nav {
 
 /* ========== FOOTER ========== */
 footer {
-    background: linear-gradient(135deg, #1a2838, #2d3e50);
+    background: linear-gradient(135deg, #1a2e42, #0f1b2e);
     color: white;
     padding: 60px 0 30px;
 }
@@ -822,8 +947,31 @@ footer {
         display: none;
     }
 
+    .nav-contact {
+        margin-left: auto;
+    }
+
+    .whatsapp-link {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .whatsapp-icon {
+        width: 16px;
+        height: 16px;
+    }
+
     .hero {
-        padding: 140px 0 80px;
+        padding: 140px 0 60px;
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .hero-content {
+        text-align: center;
     }
 
     .hero h1 {
@@ -831,7 +979,15 @@ footer {
     }
 
     .hero p {
-        font-size: 16px;
+        margin: 0 auto 40px;
+    }
+
+    .form-box {
+        padding: 30px;
+    }
+
+    .form-box h3 {
+        font-size: 20px;
     }
 
     .featured-consultation-banner {
