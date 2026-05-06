@@ -97,6 +97,42 @@ nav {
     width: 100%;
 }
 
+
+
+/* ========== RESPONSIVE NAV ========== */
+
+.nav-links2 {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+}
+
+.nav-links2 a {
+    text-decoration: none;
+    color: #2d3e50;
+    font-weight: 500;
+    font-size: 18px;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.nav-links2 a:hover {
+   color: #2d3e50;
+}
+
+.nav-links2 a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+    transition: width 0.3s;
+}
+
+
+
 /* ========== NAV CONTACT (WHATSAPP) ========== */
 .nav-contact {
     display: flex;
@@ -131,7 +167,7 @@ nav {
 
 /* ========== HERO SECTION ========== */
 .hero {
-    padding: 180px 0 240px;
+    padding: 140px 0 140px;
     background: linear-gradient(135deg, #fef5f7 0%, #f0f4ff 100%);
     position: relative;
     overflow: hidden;
@@ -317,7 +353,7 @@ nav {
     padding: 40px 0 80px;
     background: linear-gradient(135deg, #fef5f7 0%, #f0f4ff 100%);
     position: relative;
-    margin-top: 20px;
+   
 }
 
 .featured-consultation-banner .container {

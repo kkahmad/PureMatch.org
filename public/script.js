@@ -10,7 +10,6 @@ document.getElementById('heroContactForm').addEventListener('submit', async (e) 
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Submitting...';
     submitBtn.disabled = true;
-    // some comment
     
     try {
         const response = await fetch('/submit-consultation', {
