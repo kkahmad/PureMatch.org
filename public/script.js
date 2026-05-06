@@ -84,3 +84,42 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });// JavaScript Document
+
+// WhatsApp popup behavior — initialize after DOM ready so elements exist
+document.addEventListener('DOMContentLoaded', () => {
+    const whatsappFab = document.getElementById('whatsappFab');
+    const whatsappPopup = document.getElementById('whatsappPopup');
+    const whatsappClose = document.getElementById('whatsappClose');
+    const whatsappStart = document.getElementById('whatsappStart');
+    const WHATSAPP_NUMBER = '+17737339216';
+    const GREETING = "Assalamu alaikum, this is Rashid from Islamic Rishta App. How can I help you today?";
+
+    function openWhatsAppChat() {
+        const text = encodeURIComponent(GREETING);
+        const url = `https://wa.me/${WHATSAPP_NUMBER.replace(/[^0-9]/g, '')}?text=${text}`;
+        window.open(url, '_blank');
+    }
+
+    if (whatsappFab && whatsappPopup) {
+        whatsappFab.addEventListener('click', () => {
+            if (whatsappPopup.classList.contains('open')) {
+                whatsappPopup.classList.remove('open');
+                whatsappPopup.style.display = 'none';
+            } else {
+                whatsappPopup.classList.add('open');
+                whatsappPopup.style.display = 'block';
+            }
+        });
+    }
+
+    if (whatsappClose && whatsappPopup) {
+        whatsappClose.addEventListener('click', () => {
+            whatsappPopup.classList.remove('open');
+            whatsappPopup.style.display = 'none';
+        });
+    }
+
+    if (whatsappStart) {
+        whatsappStart.addEventListener('click', () => openWhatsAppChat());
+    }
+});
