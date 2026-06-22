@@ -2,9 +2,10 @@
 document.getElementById('heroContactForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const name = e.target.querySelector('input[type="text"]').value;
-    const email = e.target.querySelector('input[type="email"]').value;
-    const reason = e.target.querySelector('select').value;
+    const name = e.target.querySelector('input[name="name"]').value;
+    const email = e.target.querySelector('input[name="email"]').value;
+    const phone = e.target.querySelector('input[name="phone"]').value;
+    const reason = e.target.querySelector('select[name="reason"]').value;
     
     const submitBtn = e.target.querySelector('.form-submit');
     const originalText = submitBtn.textContent;
@@ -17,14 +18,20 @@ document.getElementById('heroContactForm').addEventListener('submit', async (e) 
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, email, reason })
+            body: JSON.stringify({ name, email, phone, reason })
         });
         
         const data = await response.json();
         
         if (data.success) {
-            alert('Thank you! Your free consultation request has been submitted. We will contact you within 24 hours.');
+            const successMsg = document.getElementById('heroSuccessMessage');
+            successMsg.style.display = 'flex';
             e.target.reset();
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 5000);
         } else {
             alert('Something went wrong. Please try again.');
         }
@@ -43,6 +50,7 @@ document.getElementById('consultationForm').addEventListener('submit', async (e)
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const reason = document.getElementById('reason').value;
+    const phone = document.querySelector('input[name="phone"]')?.value || '';
     
     const submitBtn = document.querySelector('.submit-btn');
     const originalText = submitBtn.textContent;
@@ -55,14 +63,20 @@ document.getElementById('consultationForm').addEventListener('submit', async (e)
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, email, reason })
+            body: JSON.stringify({ name, email, reason, phone })
         });
         
         const data = await response.json();
         
         if (data.success) {
-            alert('Thank you! Your free consultation request has been submitted. We will contact you within 24 hours.');
+            const successMsg = document.getElementById('consultationSuccessMessage');
+            successMsg.style.display = 'flex';
             document.getElementById('consultationForm').reset();
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 5000);
         } else {
             alert('Something went wrong. Please try again.');
         }

@@ -56,18 +56,24 @@
             <div class="hero-form">
                 <div class="form-box">
                     <h3>Quick Contact</h3>
+                    <div id="heroSuccessMessage" class="success-message" style="display: none;">
+                        <span class="success-icon">✓</span>
+                        <div class="success-text">
+                            <strong>Thank You!</strong> Your free consultation request has been submitted. We will contact you within 24 hours.
+                        </div>
+                    </div>
                     <form id="heroContactForm">
                         <div class="form-group">
-                            <input type="text" placeholder="Your Name" required>
+                            <input type="text" name="name" placeholder="Your Name" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" placeholder="Email Address" required>
+                            <input type="email" name="email" placeholder="Email Address" required>
                         </div>
                         <div class="form-group">
-                            <input type="tel" placeholder="Phone Number" required>
+                            <input type="tel" name="phone" placeholder="Phone Number" required>
                         </div>
                         <div class="form-group">
-                            <select required>
+                            <select name="reason" required>
                                 <option value="">I'm interested in...</option>
                                 <option value="counseling">Pre-Marriage Counseling</option>
                                 <option value="coaching">Life Coaching</option>
@@ -233,11 +239,20 @@
                 </div>
                 <form id="consultationForm" class="contact-form">
                     <h3>Book Consultation</h3>
+                    <div id="consultationSuccessMessage" class="success-message" style="display: none;">
+                        <span class="success-icon">✓</span>
+                        <div class="success-text">
+                            <strong>Thank You!</strong> Your free consultation request has been submitted. We will contact you within 24 hours.
+                        </div>
+                    </div>
                     <div class="form-group">
                         <input type="text" id="name" name="name" placeholder="Your Full Name" required>
                     </div>
                     <div class="form-group">
                         <input type="email" id="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
                     </div>
                     <div class="form-group">
                         <select id="reason" name="reason" required>

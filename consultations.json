@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1782125888329,
+    "name": "Khurram",
+    "email": "kk.ahmad@gmail.com",
+    "reason": "counseling",
+    "date": "2026-06-22T10:58:08.329Z"
+  },
+  {
+    "id": 1782126523429,
+    "name": "Khurram Ahmad",
+    "email": "kk.ahmad@gmail.com",
+    "phone": "03238500444",
+    "reason": "coaching",
+    "date": "2026-06-22T11:08:43.429Z"
+  },
+  {
+    "id": 1782127407617,
+    "name": "Saleem Ahmad",
+    "email": "khurram.mis@stmu.edu.pk",
+    "phone": "03238500444",
+    "reason": "rishta",
+    "date": "2026-06-22T11:23:27.617Z"
+  },
+  {
+    "id": 1782127560151,
+    "name": "Khurram Ahmad",
+    "email": "kk.ahmad@gmail.com",
+    "phone": "",
+    "reason": "general",
+    "date": "2026-06-22T11:26:00.151Z"
+  }
+]
