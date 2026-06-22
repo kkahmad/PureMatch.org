@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultations Dashboard - PureMatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fef5f7 0%, #f0f4ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #D97A8E 0%, #6BA3D6 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(217, 122, 142, 0.2);
+            text-align: center;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.95;
+            font-size: 16px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .stat-card .label {
+            color: #888;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            color: #D97A8E;
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .logout-btn {
+            background: #ff3b30;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ff2920;
+            transform: translateY(-2px);
+        }
+
+        .consultations-table-wrapper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .consultations-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .consultations-table thead {
+            background: linear-gradient(135deg, #D97A8E 0%, #6BA3D6 100%);
+            color: white;
+        }
+
+        .consultations-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .consultations-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .consultations-table tbody tr {
+            transition: all 0.2s;
+        }
+
+        .consultations-table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .consultations-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-id {
+            font-family: monospace;
+            color: #D97A8E;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .table-name {
+            color: #2d3e50;
+            font-weight: 600;
+        }
+
+        .table-email {
+            color: #D97A8E;
+        }
+
+        .table-email a {
+            color: #D97A8E;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .table-email a:hover {
+            text-decoration: underline;
+        }
+
+        .table-phone a {
+            color: #6BA3D6;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .table-phone a:hover {
+            text-decoration: underline;
+        }
+
+        .table-reason {
+            display: inline-block;
+            background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .table-date {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2d3e50;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #2d3e50;
+        }
+
+        .modal p {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e8e9eb;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #D97A8E;
+            box-shadow: 0 0 0 3px rgba(217, 122, 142, 0.1);
+        }
+
+        .password-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #D97A8E, #6BA3D6);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .password-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(217, 122, 142, 0.25);
+        }
+
+        .error {
+            color: #ff3b30;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .consultations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .stats {
+                width: 100%;
+            }
+
+            .logout-btn {
+                width: 100%;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Consultations Dashboard</h1>
+            <p>All consultation requests from your website</p>
+        </header>
+
+        <div class="controls">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="label">Total Requests</div>
+                    <div class="value" id="totalCount">0</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">🔒 Logout</button>
+        </div>
+
+        <div class="consultations-table-wrapper">
+            <table class="consultations-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Interested In</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody id="consultationsContainer">
+                    <!-- Consultations will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">📭</div>
+            <h2>No Consultations Yet</h2>
+            <p>Your consultation requests will appear here</p>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal show" id="passwordModal">
+        <div class="modal-content">
+            <h2>🔐 Access Restricted</h2>
+            <p>This dashboard is password protected. Please enter the password to continue.</p>
+            <input type="password" class="password-input" id="passwordInput" placeholder="Enter Password" onkeypress="handlePasswordKeypress(event)">
+            <button class="password-btn" onclick="checkPassword()">Unlock Dashboard</button>
+            <div class="error" id="errorMsg"></div>
+        </div>
+    </div>
+
+    <script>
+        let isAuthenticated = false;
+
+        // Check password
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (password === '123') {
+                isAuthenticated = true;
+                document.getElementById('passwordModal').classList.remove('show');
+                loadConsultations();
+            } else {
+                errorMsg.textContent = '❌ Incorrect password. Please try again.';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function handlePasswordKeypress(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        }
+
+        // Load consultations from server
+        async function loadConsultations() {
+            try {
+                const response = await fetch('/api/consultations');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                const container = document.getElementById('consultationsContainer');
+                const emptyState = document.getElementById('emptyState');
+                const tableWrapper = document.querySelector('.consultations-table-wrapper');
+
+                if (data.consultations && data.consultations.length > 0) {
+                    container.innerHTML = '';
+                    emptyState.style.display = 'none';
+                    tableWrapper.style.display = 'block';
+
+                    data.consultations.reverse().forEach(consultation => {
+                        const row = createConsultationRow(consultation);
+                        container.appendChild(row);
+                    });
+
+                    document.getElementById('totalCount').textContent = data.consultations.length;
+                } else {
+                    container.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    tableWrapper.style.display = 'none';
+                    document.getElementById('totalCount').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Error loading consultations:', error);
+                const container = document.getElementById('consultationsContainer');
+                container.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #ff3b30;"><p>⚠️ Error loading consultations. Make sure the server is running.</p><p style="font-size: 12px; margin-top: 10px;">Error: ' + error.message + '</p></td></tr>';
+            }
+        }
+
+        // Create consultation table row
+        function createConsultationRow(consultation) {
+            const row = document.createElement('tr');
+
+            const date = new Date(consultation.date);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const reasonLabel = consultation.reason
+                .split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+                .replace(/([A-Z])/g, ' $1').trim();
+
+            row.innerHTML = `
+                <td><span class="table-id">${consultation.id}</span></td>
+                <td><span class="table-name">${escapeHtml(consultation.name)}</span></td>
+                <td><span class="table-email"><a href="mailto:${consultation.email}">${escapeHtml(consultation.email)}</a></span></td>
+                <td><span class="table-phone"><a href="tel:${consultation.phone}">${escapeHtml(consultation.phone)}</a></span></td>
+                <td><span class="table-reason">${reasonLabel}</span></td>
+                <td><span class="table-date">${formattedDate}</span></td>
+            `;
+
+            return row;
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Logout
+        function logout() {
+            isAuthenticated = false;
+            document.getElementById('passwordModal').classList.add('show');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMsg').textContent = '';
+        }
+
+        // Focus on password input on load
+        window.addEventListener('load', () => {
+            document.getElementById('passwordInput').focus();
+        });
+    </script>
+</body>
+</html>

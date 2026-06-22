@@ -125,6 +125,22 @@ app.post('/submit-consultation', async (req, res) => {
     res.json({ success: true, message: 'Consultation request submitted successfully!' });
 });
 
+// API endpoint to get all consultations
+app.get('/api/consultations', (req, res) => {
+    try {
+        if (fs.existsSync('consultations.json')) {
+            const data = fs.readFileSync('consultations.json');
+            const consultations = JSON.parse(data);
+            res.json({ consultations });
+        } else {
+            res.json({ consultations: [] });
+        }
+    } catch (error) {
+        console.error('Error reading consultations:', error);
+        res.json({ consultations: [] });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`PureMatch.org running on http://localhost:${PORT}`);
 });// JavaScript Document
