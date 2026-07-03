@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const whatsappPopup = document.getElementById('whatsappPopup');
     const whatsappClose = document.getElementById('whatsappClose');
     const whatsappStart = document.getElementById('whatsappStart');
-    const WHATSAPP_NUMBER = '+17737339216';
+    const WHATSAPP_NUMBER = '+16306088477';
     const GREETING = "Assalamu alaikum, this is Rashid from Islamic Rishta App. How can I help you today?";
 
     function openWhatsAppChat() {
