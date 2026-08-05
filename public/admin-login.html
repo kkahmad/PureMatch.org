@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | PureMatch</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="heart-logo">
+                    <svg viewBox="0 0 100 90" width="45" height="45">
+                        <path d="M45,85 C20,65 5,50 5,35 C5,20 15,10 22,10 C30,10 40,20 45,30 L45,30" fill="#D97A8E" opacity="0.9"/>
+                        <path d="M45,30 L45,30 C50,20 60,10 68,10 C75,10 85,20 85,35 C85,50 70,65 45,85 Z" fill="#6BA3D6" opacity="0.9"/>
+                    </svg>
+                </div>
+                <span class="nav-links2"><a href="/"><span>PureMatch - <small>Muslim Rishta Consultation</small></span></a></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="auth-page">
+        <div class="auth-page-card">
+            <p class="admin-kicker">Restricted Access</p>
+            <h2>Admin Sign In</h2>
+            <p>Use your admin credentials to access the management dashboard.</p>
+            <div id="authMessage" class="auth-message" style="display:none;"></div>
+            <form id="adminLoginForm" class="auth-form">
+                <input type="email" name="email" placeholder="Admin email" required>
+                <input type="password" name="password" placeholder="Admin password" required>
+                <button type="submit">Access Dashboard</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/script.js"></script>
+</body>
+</html>
