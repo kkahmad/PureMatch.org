@@ -76,11 +76,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/admin/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin-login.html'));
+    res.redirect('/signin');
 });
 
 app.get('/admin-login.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin-login.html'));
+    res.redirect('/signin');
 });
 
 app.get('/admin', (req, res) => {
@@ -105,10 +105,10 @@ app.get('/profile', (req, res) => {
 
 // Authentication routes
 app.post('/api/auth/signup', (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, contactNumber } = req.body;
 
-    if (!name || !email || !password) {
-        return res.status(400).json({ success: false, message: 'Please provide your name, email, and password.' });
+    if (!name || !email || !password || !contactNumber) {
+        return res.status(400).json({ success: false, message: 'Please provide your name, email, password, and contact number.' });
     }
 
     const users = loadUsers();
@@ -122,7 +122,9 @@ app.post('/api/auth/signup', (req, res) => {
         username: generateUsername(name, email),
         email: email.toLowerCase().trim(),
         password: hashPassword(password),
-        profile: {},
+        profile: {
+            contactNumber: contactNumber.trim()
+        },
         createdAt: new Date().toISOString(),
         verified: true
     };
@@ -144,6 +146,23 @@ app.post('/api/auth/signin', (req, res) => {
 
     if (!email || !password) {
         return res.status(400).json({ success: false, message: 'Please provide your email and password.' });
+    }
+
+    if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
+        const token = createAdminToken();
+        return res.json({
+            success: true,
+            message: 'Signed in successfully.',
+            token,
+            user: {
+                id: -1,
+                name: 'PureMatch Admin',
+                email: ADMIN_EMAIL,
+                username: 'purematch-admin',
+                admin: true,
+                verified: true
+            }
+        });
     }
 
     const users = loadUsers();

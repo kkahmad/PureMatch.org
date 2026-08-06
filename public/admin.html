@@ -23,6 +23,7 @@
                 <div class="auth-nav-links">
                     <a href="/" class="auth-nav-link">Home</a>
                     <a href="/admin" class="auth-nav-link auth-nav-link-primary">Admin</a>
+                    <button id="logoutButton" type="button" class="auth-nav-link auth-nav-link-primary" style="display:none;">Logout</button>
                 </div>
             </div>
         </div>
@@ -43,6 +44,21 @@
                     <button type="button" id="showCreateUserForm" class="admin-primary-btn">Add User</button>
                 </div>
 
+                <div class="admin-card-toolbar">
+                    <div class="table-controls">
+                        <input type="search" id="adminSearchInput" placeholder="Search users, email, contact...">
+                        <button type="button" id="exportSelectedBtn" class="admin-secondary-btn">Export Selected</button>
+                        <button type="button" id="exportAllBtn" class="admin-secondary-btn">Export All</button>
+                    </div>
+                    <div class="pagination-info">
+                        <span id="adminPaginationInfo">Showing 0 of 0</span>
+                        <div class="pagination-buttons">
+                            <button type="button" id="prevPageBtn" class="admin-secondary-btn">Previous</button>
+                            <button type="button" id="nextPageBtn" class="admin-secondary-btn">Next</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="adminMessage" class="admin-message" style="display:none;"></div>
 
                 <form id="adminUserForm" class="admin-form" style="display:none;">
@@ -56,6 +72,7 @@
                         <input type="text" name="occupation" placeholder="Occupation">
                         <input type="text" name="age" placeholder="Age">
                         <input type="text" name="height" placeholder="Height">
+                        <input type="tel" name="contactNumber" placeholder="Contact number">
                         <input type="text" name="religion" placeholder="Religion">
                         <input type="text" name="caste" placeholder="Caste">
                         <input type="text" name="language" placeholder="Language">
@@ -71,23 +88,14 @@
                     </div>
                 </form>
 
-                <div class="admin-table-wrap">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Username</th>
-                                <th>Created</th>
-                                <th>Verified</th>
-                                <th>Profile</th>
-                                <th>Export</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminUserTableBody"></tbody>
-                    </table>
+                <div class="admin-card-toolbar">
+                    <label class="admin-select-all">
+                        <input type="checkbox" id="selectAllUsers">
+                        Select visible users
+                    </label>
                 </div>
+
+                <div class="admin-card-list" id="adminUserCardList"></div>
             </section>
         </div>
     </main>

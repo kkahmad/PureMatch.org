@@ -12,7 +12,14 @@ const signupPageForm = document.getElementById('signupPageForm');
 const signinPageForm = document.getElementById('signinPageForm');
 const adminUserForm = document.getElementById('adminUserForm');
 const adminMessage = document.getElementById('adminMessage');
-const adminUserTableBody = document.getElementById('adminUserTableBody');
+const adminUserCardList = document.getElementById('adminUserCardList');
+const adminSearchInput = document.getElementById('adminSearchInput');
+const exportSelectedBtn = document.getElementById('exportSelectedBtn');
+const exportAllBtn = document.getElementById('exportAllBtn');
+const prevPageBtn = document.getElementById('prevPageBtn');
+const nextPageBtn = document.getElementById('nextPageBtn');
+const adminPaginationInfo = document.getElementById('adminPaginationInfo');
+const selectAllUsers = document.getElementById('selectAllUsers');
 const showCreateUserFormButton = document.getElementById('showCreateUserForm');
 const cancelAdminEditButton = document.getElementById('cancelAdminEdit');
 const adminProfileView = document.getElementById('adminProfileView');
@@ -20,6 +27,11 @@ const adminLoginForm = document.getElementById('adminLoginForm');
 let currentUser = null;
 let adminAuthToken = localStorage.getItem('purematchAdminToken');
 let authToken = localStorage.getItem('purematchToken');
+let adminUsers = [];
+let filteredAdminUsers = [];
+let currentAdminPage = 1;
+const adminUsersPerPage = 10;
+const selectedAdminIds = new Set();
 const isDedicatedAuthPage = ['/signin', '/signup'].includes(window.location.pathname);
 const isProfilePage = window.location.pathname === '/profile';
 
@@ -56,7 +68,7 @@ function showSignupSuccessMessage() {
 }
 
 function updateAuthNavState() {
-    const loggedIn = !!authToken;
+    const loggedIn = !!authToken || !!adminAuthToken;
 
     if (signInLink) {
         signInLink.style.display = loggedIn ? 'none' : 'inline-flex';
@@ -67,7 +79,7 @@ function updateAuthNavState() {
     }
 
     if (profileLink) {
-        profileLink.style.display = loggedIn ? 'inline-flex' : 'none';
+        profileLink.style.display = loggedIn && !!authToken ? 'inline-flex' : 'none';
     }
 
     if (logoutButton) {
@@ -77,10 +89,14 @@ function updateAuthNavState() {
 
 function handleLogout() {
     localStorage.removeItem('purematchToken');
+    localStorage.removeItem('purematchAdminToken');
     authToken = null;
+    adminAuthToken = null;
     currentUser = null;
     updateAuthNavState();
-    if (window.location.pathname === '/profile') {
+    if (window.location.pathname === '/profile' || window.location.pathname === '/admin') {
+        window.location.href = '/signin';
+    } else {
         window.location.href = '/';
     }
 }
@@ -144,7 +160,9 @@ async function handleAuthSubmit(form, endpoint) {
         if (data.success) {
             if (endpoint === '/api/auth/signup') {
                 localStorage.removeItem('purematchToken');
+                localStorage.removeItem('purematchAdminToken');
                 authToken = null;
+                adminAuthToken = null;
                 currentUser = null;
                 updateAuthNavState();
                 form.reset();
@@ -152,6 +170,18 @@ async function handleAuthSubmit(form, endpoint) {
                 return;
             }
 
+            if (data.user?.admin) {
+                localStorage.removeItem('purematchToken');
+                localStorage.setItem('purematchAdminToken', data.token);
+                authToken = null;
+                adminAuthToken = data.token;
+                currentUser = data.user;
+                updateAuthNavState();
+                window.location.href = '/admin';
+                return;
+            }
+
+            localStorage.removeItem('purematchAdminToken');
             authToken = data.token;
             currentUser = data.user;
             localStorage.setItem('purematchToken', authToken);
@@ -266,53 +296,133 @@ async function fetchUsers() {
             return;
         }
 
-        renderAdminUsers(data.users);
+        adminUsers = data.users;
+        filteredAdminUsers = [...adminUsers];
+        currentAdminPage = 1;
+        selectedAdminIds.clear();
+        if (selectAllUsers) selectAllUsers.checked = false;
+        renderAdminUsers();
     } catch (error) {
         showAdminMessage('Unable to load users right now.', true);
     }
 }
 
-function renderAdminUsers(users) {
-    if (!adminUserTableBody) return;
+function getCurrentAdminPageUsers() {
+    const start = (currentAdminPage - 1) * adminUsersPerPage;
+    return filteredAdminUsers.slice(start, start + adminUsersPerPage);
+}
 
-    adminUserTableBody.innerHTML = '';
+function updateAdminPagination() {
+    if (!adminPaginationInfo || !prevPageBtn || !nextPageBtn) return;
+    const total = filteredAdminUsers.length;
+    const start = total === 0 ? 0 : (currentAdminPage - 1) * adminUsersPerPage + 1;
+    const end = Math.min(currentAdminPage * adminUsersPerPage, total);
+    adminPaginationInfo.textContent = `Showing ${start}-${end} of ${total}`;
+    prevPageBtn.disabled = currentAdminPage <= 1;
+    nextPageBtn.disabled = currentAdminPage * adminUsersPerPage >= total;
+}
 
-    users.forEach((user) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>
-                <div class="admin-user-cell">
+function applyAdminSearch() {
+    const query = adminSearchInput?.value.trim().toLowerCase() || '';
+    filteredAdminUsers = adminUsers.filter((user) => {
+        if (!query) return true;
+        const profile = user.profile || {};
+        return [
+            user.name,
+            user.email,
+            user.username,
+            String(user.id),
+            profile.contactNumber,
+            profile.religion,
+            profile.sect,
+            profile.maritalStatus,
+            profile.gender,
+            profile.caste,
+            profile.language,
+            profile.city
+        ].some((value) => value && value.toString().toLowerCase().includes(query));
+    });
+    currentAdminPage = 1;
+    if (selectAllUsers) selectAllUsers.checked = false;
+    renderAdminUsers();
+}
+
+function toggleSelectAllVisibleRows(checked) {
+    getCurrentAdminPageUsers().forEach((user) => {
+        if (checked) {
+            selectedAdminIds.add(user.id);
+        } else {
+            selectedAdminIds.delete(user.id);
+        }
+    });
+    renderAdminUsers();
+}
+
+function renderAdminUsers() {
+    if (!adminUserCardList) return;
+
+    adminUserCardList.innerHTML = '';
+    const pageUsers = getCurrentAdminPageUsers();
+
+    pageUsers.forEach((user) => {
+        const selected = selectedAdminIds.has(user.id);
+        const card = document.createElement('article');
+        card.className = 'admin-user-card';
+        card.innerHTML = `
+            <div class="admin-user-card-header">
+                <label class="admin-user-card-checkbox">
+                    <input type="checkbox" class="select-user-checkbox" data-select-user="${user.id}" ${selected ? 'checked' : ''}>
+                </label>
+                <div class="admin-user-card-title">
                     <div class="admin-user-avatar">${(user.name || 'U').charAt(0).toUpperCase()}</div>
                     <div>
                         <div class="admin-user-name">${user.name || '—'}</div>
                         <div class="admin-user-sub">ID #${user.id}</div>
                     </div>
                 </div>
-            </td>
-            <td>${user.email || '—'}</td>
-            <td>${user.username || '—'}</td>
-            <td>${new Date(user.createdAt).toLocaleDateString()}</td>
-            <td><span class="admin-badge ${user.verified ? 'verified' : ''}">${user.verified ? 'Verified' : 'Pending'}</span></td>
-            <td><a href="/admin/profile?id=${user.id}" class="admin-link-btn">View Profile</a></td>
-            <td><button type="button" class="admin-link-btn" data-export-user="${user.id}">Export PDF</button></td>
-            <td>
-                <div class="admin-actions">
-                    <button type="button" class="admin-action-btn" data-edit-user="${user.id}">Edit</button>
-                    <button type="button" class="admin-action-btn danger" data-delete-user="${user.id}">Delete</button>
+                <div class="admin-user-badge-row">
+                    <span class="admin-badge ${user.verified ? 'verified' : ''}">${user.verified ? 'Verified' : 'Pending'}</span>
                 </div>
-            </td>
+            </div>
+            <div class="admin-user-card-body">
+                <div><strong>Email:</strong> ${user.email ? `<a href="mailto:${user.email}">${user.email}</a>` : '—'}</div>
+                <div><strong>Contact:</strong> ${user.profile?.contactNumber || '—'}</div>
+                <div><strong>Username:</strong> ${user.username || '—'}</div>
+                <div><strong>Created:</strong> ${new Date(user.createdAt).toLocaleDateString()}</div>
+            </div>
+            <div class="admin-user-card-actions">
+                <a href="/admin/profile?id=${user.id}" class="admin-link-btn">View Profile</a>
+                <button type="button" class="admin-link-btn" data-export-user="${user.id}">Export PDF</button>
+                <button type="button" class="admin-action-btn" data-edit-user="${user.id}">Edit</button>
+                <button type="button" class="admin-action-btn danger" data-delete-user="${user.id}">Delete</button>
+            </div>
         `;
-        adminUserTableBody.appendChild(row);
+        adminUserCardList.appendChild(card);
     });
 
-    adminUserTableBody.querySelectorAll('[data-edit-user]').forEach((button) => {
+    adminUserCardList.querySelectorAll('.select-user-checkbox').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const id = Number(checkbox.dataset.selectUser);
+            if (checkbox.checked) {
+                selectedAdminIds.add(id);
+            } else {
+                selectedAdminIds.delete(id);
+            }
+            if (selectAllUsers) {
+                const allVisibleSelected = getCurrentAdminPageUsers().every((user) => selectedAdminIds.has(user.id));
+                selectAllUsers.checked = allVisibleSelected;
+            }
+        });
+    });
+
+    adminUserCardList.querySelectorAll('[data-edit-user]').forEach((button) => {
         button.addEventListener('click', async () => {
             const id = Number(button.dataset.editUser);
             await loadUserForEdit(id);
         });
     });
 
-    adminUserTableBody.querySelectorAll('[data-delete-user]').forEach((button) => {
+    adminUserCardList.querySelectorAll('[data-delete-user]').forEach((button) => {
         button.addEventListener('click', async () => {
             const id = Number(button.dataset.deleteUser);
             if (confirm('Delete this user?')) {
@@ -321,12 +431,73 @@ function renderAdminUsers(users) {
         });
     });
 
-    adminUserTableBody.querySelectorAll('[data-export-user]').forEach((button) => {
+    adminUserCardList.querySelectorAll('[data-export-user]').forEach((button) => {
         button.addEventListener('click', async () => {
             const id = Number(button.dataset.exportUser);
             await exportUserPdf(id);
         });
     });
+
+    updateAdminPagination();
+}
+
+function exportUsersPdfForIds(ids) {
+    const records = adminUsers.filter((user) => ids.includes(user.id));
+    if (records.length === 0) {
+        showAdminMessage('No users selected for export.', true);
+        return;
+    }
+
+    const content = `
+        <html>
+            <body style="font-family: Arial; padding: 24px;">
+                <h1>PureMatch User Profiles</h1>
+                ${records.map((user) => `
+                    <section style="margin-bottom: 24px; page-break-after: always;">
+                        <h2>${user.name || 'Unknown User'}</h2>
+                        <p><strong>Email:</strong> ${user.email || ''}</p>
+                        <p><strong>Contact:</strong> ${user.profile?.contactNumber || ''}</p>
+                        <p><strong>Username:</strong> ${user.username || ''}</p>
+                        <p><strong>Created:</strong> ${new Date(user.createdAt).toLocaleDateString()}</p>
+                        <h3>Profile Details</h3>
+                        <p><strong>Qualification:</strong> ${user.profile?.qualification || ''}</p>
+                        <p><strong>Occupation:</strong> ${user.profile?.occupation || ''}</p>
+                        <p><strong>Age:</strong> ${user.profile?.age || ''}</p>
+                        <p><strong>Height:</strong> ${user.profile?.height || ''}</p>
+                        <p><strong>Religion:</strong> ${user.profile?.religion || ''}</p>
+                        <p><strong>Sect:</strong> ${user.profile?.sect || ''}</p>
+                        <p><strong>Marital Status:</strong> ${user.profile?.maritalStatus || ''}</p>
+                        <p><strong>Gender:</strong> ${user.profile?.gender || ''}</p>
+                        <p><strong>Caste:</strong> ${user.profile?.caste || ''}</p>
+                        <p><strong>Language:</strong> ${user.profile?.language || ''}</p>
+                        <p><strong>City:</strong> ${user.profile?.city || ''}</p>
+                        <p><strong>Family Members:</strong> ${user.profile?.familyMembers || ''}</p>
+                        <p><strong>Family Type:</strong> ${user.profile?.familyType || ''}</p>
+                        <p><strong>Skin Color:</strong> ${user.profile?.skinColor || ''}</p>
+                        <p><strong>Reason:</strong> ${user.profile?.reason || ''}</p>
+                    </section>
+                `).join('')}
+            </body>
+        </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(content);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+}
+
+function exportAllAdminUsers() {
+    exportUsersPdfForIds(filteredAdminUsers.map((user) => user.id));
+}
+
+function exportSelectedAdminUsers() {
+    if (selectedAdminIds.size === 0) {
+        showAdminMessage('Please select at least one user to export.', true);
+        return;
+    }
+    exportUsersPdfForIds(Array.from(selectedAdminIds));
 }
 
 async function loadUserForEdit(id) {
@@ -359,9 +530,13 @@ async function loadUserForEdit(id) {
         form.querySelector('[name="age"]').value = user.profile?.age || '';
         form.querySelector('[name="height"]').value = user.profile?.height || '';
         form.querySelector('[name="religion"]').value = user.profile?.religion || '';
+        form.querySelector('[name="sect"]').value = user.profile?.sect || '';
+        form.querySelector('[name="maritalStatus"]').value = user.profile?.maritalStatus || '';
+        form.querySelector('[name="gender"]').value = user.profile?.gender || '';
         form.querySelector('[name="caste"]').value = user.profile?.caste || '';
         form.querySelector('[name="language"]').value = user.profile?.language || '';
         form.querySelector('[name="city"]').value = user.profile?.city || '';
+        form.querySelector('[name="contactNumber"]').value = user.profile?.contactNumber || '';
         form.querySelector('[name="familyMembers"]').value = user.profile?.familyMembers || '';
         form.querySelector('[name="familyType"]').value = user.profile?.familyType || '';
         form.querySelector('[name="skinColor"]').value = user.profile?.skinColor || '';
@@ -420,7 +595,11 @@ async function exportUserPdf(id) {
                     <p><strong>Occupation:</strong> ${user.profile?.occupation || ''}</p>
                     <p><strong>Age:</strong> ${user.profile?.age || ''}</p>
                     <p><strong>Height:</strong> ${user.profile?.height || ''}</p>
+                    <p><strong>Contact Number:</strong> ${user.profile?.contactNumber || ''}</p>
                     <p><strong>Religion:</strong> ${user.profile?.religion || ''}</p>
+                    <p><strong>Sect:</strong> ${user.profile?.sect || ''}</p>
+                    <p><strong>Marital Status:</strong> ${user.profile?.maritalStatus || ''}</p>
+                    <p><strong>Gender:</strong> ${user.profile?.gender || ''}</p>
                     <p><strong>Caste:</strong> ${user.profile?.caste || ''}</p>
                     <p><strong>Language:</strong> ${user.profile?.language || ''}</p>
                     <p><strong>City:</strong> ${user.profile?.city || ''}</p>
@@ -453,7 +632,11 @@ if (adminUserForm) {
             occupation: payload.occupation,
             age: payload.age,
             height: payload.height,
+            contactNumber: payload.contactNumber,
             religion: payload.religion,
+            sect: payload.sect,
+            maritalStatus: payload.maritalStatus,
+            gender: payload.gender,
             caste: payload.caste,
             language: payload.language,
             city: payload.city,
@@ -499,6 +682,45 @@ if (showCreateUserFormButton) {
             adminUserForm.style.display = 'block';
         }
     });
+}
+
+if (adminSearchInput) {
+    adminSearchInput.addEventListener('input', () => {
+        applyAdminSearch();
+    });
+}
+
+if (prevPageBtn) {
+    prevPageBtn.addEventListener('click', () => {
+        if (currentAdminPage > 1) {
+            currentAdminPage -= 1;
+            renderAdminUsers();
+        }
+    });
+}
+
+if (nextPageBtn) {
+    nextPageBtn.addEventListener('click', () => {
+        const maxPage = Math.ceil(filteredAdminUsers.length / adminUsersPerPage);
+        if (currentAdminPage < maxPage) {
+            currentAdminPage += 1;
+            renderAdminUsers();
+        }
+    });
+}
+
+if (selectAllUsers) {
+    selectAllUsers.addEventListener('change', () => {
+        toggleSelectAllVisibleRows(selectAllUsers.checked);
+    });
+}
+
+if (exportAllBtn) {
+    exportAllBtn.addEventListener('click', exportAllAdminUsers);
+}
+
+if (exportSelectedBtn) {
+    exportSelectedBtn.addEventListener('click', exportSelectedAdminUsers);
 }
 
 if (cancelAdminEditButton && adminUserForm) {
@@ -566,7 +788,11 @@ if (adminProfileView) {
                         <div><strong>Occupation:</strong> ${profile.occupation || '—'}</div>
                         <div><strong>Age:</strong> ${profile.age || '—'}</div>
                         <div><strong>Height:</strong> ${profile.height || '—'}</div>
+                        <div><strong>Contact Number:</strong> ${profile.contactNumber || '—'}</div>
                         <div><strong>Religion:</strong> ${profile.religion || '—'}</div>
+                        <div><strong>Sect:</strong> ${profile.sect || '—'}</div>
+                        <div><strong>Marital Status:</strong> ${profile.maritalStatus || '—'}</div>
+                        <div><strong>Gender:</strong> ${profile.gender || '—'}</div>
                         <div><strong>Caste:</strong> ${profile.caste || '—'}</div>
                         <div><strong>Language:</strong> ${profile.language || '—'}</div>
                         <div><strong>City:</strong> ${profile.city || '—'}</div>
@@ -586,6 +812,10 @@ if (adminProfileView) {
 restoreSession();
 updateAuthNavState();
 
+if (adminAuthToken && window.location.pathname === '/admin') {
+    updateAuthNavState();
+}
+
 if (window.location.pathname === '/admin') {
     if (!adminAuthToken) {
         window.location.href = '/admin/login';
@@ -599,7 +829,7 @@ if (window.location.pathname === '/admin') {
                 return;
             }
 
-            if (adminUserTableBody) {
+            if (adminUserCardList) {
                 fetchUsers();
             }
         }).catch(() => {
@@ -652,6 +882,9 @@ if (window.location.pathname === '/admin') {
                                     <div><strong>Age:</strong> ${profile.age || '—'}</div>
                                     <div><strong>Height:</strong> ${profile.height || '—'}</div>
                                     <div><strong>Religion:</strong> ${profile.religion || '—'}</div>
+                                    <div><strong>Sect:</strong> ${profile.sect || '—'}</div>
+                                    <div><strong>Marital Status:</strong> ${profile.maritalStatus || '—'}</div>
+                                    <div><strong>Gender:</strong> ${profile.gender || '—'}</div>
                                     <div><strong>Caste:</strong> ${profile.caste || '—'}</div>
                                     <div><strong>Language:</strong> ${profile.language || '—'}</div>
                                     <div><strong>City:</strong> ${profile.city || '—'}</div>
