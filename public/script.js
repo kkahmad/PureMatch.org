@@ -519,28 +519,35 @@ async function loadUserForEdit(id) {
         const form = adminUserForm;
         if (!form) return;
 
+        const setFieldValue = (name, value = '') => {
+            const field = form.querySelector(`[name="${name}"]`);
+            if (field) {
+                field.value = value;
+            }
+        };
+
         form.style.display = 'block';
-        form.querySelector('[name="id"]').value = user.id;
-        form.querySelector('[name="name"]').value = user.name || '';
-        form.querySelector('[name="email"]').value = user.email || '';
-        form.querySelector('[name="username"]').value = user.username || '';
-        form.querySelector('[name="password"]').value = '';
-        form.querySelector('[name="qualification"]').value = user.profile?.qualification || '';
-        form.querySelector('[name="occupation"]').value = user.profile?.occupation || '';
-        form.querySelector('[name="age"]').value = user.profile?.age || '';
-        form.querySelector('[name="height"]').value = user.profile?.height || '';
-        form.querySelector('[name="religion"]').value = user.profile?.religion || '';
-        form.querySelector('[name="sect"]').value = user.profile?.sect || '';
-        form.querySelector('[name="maritalStatus"]').value = user.profile?.maritalStatus || '';
-        form.querySelector('[name="gender"]').value = user.profile?.gender || '';
-        form.querySelector('[name="caste"]').value = user.profile?.caste || '';
-        form.querySelector('[name="language"]').value = user.profile?.language || '';
-        form.querySelector('[name="city"]').value = user.profile?.city || '';
-        form.querySelector('[name="contactNumber"]').value = user.profile?.contactNumber || '';
-        form.querySelector('[name="familyMembers"]').value = user.profile?.familyMembers || '';
-        form.querySelector('[name="familyType"]').value = user.profile?.familyType || '';
-        form.querySelector('[name="skinColor"]').value = user.profile?.skinColor || '';
-        form.querySelector('[name="reason"]').value = user.profile?.reason || '';
+        setFieldValue('id', user.id || '');
+        setFieldValue('name', user.name || '');
+        setFieldValue('email', user.email || '');
+        setFieldValue('username', user.username || '');
+        setFieldValue('password', '');
+        setFieldValue('qualification', user.profile?.qualification || '');
+        setFieldValue('occupation', user.profile?.occupation || '');
+        setFieldValue('age', user.profile?.age || '');
+        setFieldValue('height', user.profile?.height || '');
+        setFieldValue('religion', user.profile?.religion || '');
+        setFieldValue('sect', user.profile?.sect || '');
+        setFieldValue('maritalStatus', user.profile?.maritalStatus || '');
+        setFieldValue('gender', user.profile?.gender || '');
+        setFieldValue('caste', user.profile?.caste || '');
+        setFieldValue('language', user.profile?.language || '');
+        setFieldValue('city', user.profile?.city || '');
+        setFieldValue('contactNumber', user.profile?.contactNumber || '');
+        setFieldValue('familyMembers', user.profile?.familyMembers || '');
+        setFieldValue('familyType', user.profile?.familyType || '');
+        setFieldValue('skinColor', user.profile?.skinColor || '');
+        setFieldValue('reason', user.profile?.reason || '');
         showAdminMessage('Editing selected user.');
     } catch (error) {
         showAdminMessage('Unable to load selected user.', true);

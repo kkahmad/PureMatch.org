@@ -18,7 +18,10 @@
       "familyMembers": "2",
       "familyType": "Separate",
       "skinColor": "light brown",
-      "reason": "counselling"
+      "reason": "counselling",
+      "sect": "Sunni",
+      "maritalStatus": "Single",
+      "gender": "Male"
     },
     "createdAt": "2026-08-06T10:05:16.319Z",
     "verified": true
@@ -36,13 +39,16 @@
       "height": "5'8",
       "contactNumber": "03238500444",
       "religion": "Islam",
-      "caste": "Sunni",
+      "caste": "Arain",
       "language": "Urdu",
       "city": "Rawalpindi",
       "familyMembers": "2",
       "familyType": "Separate",
       "skinColor": "light brown",
-      "reason": "Councelling / Marriage"
+      "reason": "Councelling / Marriage",
+      "sect": "Sunni",
+      "maritalStatus": "Single",
+      "gender": "Male"
     },
     "createdAt": "2026-08-06T11:21:17.792Z",
     "verified": true
