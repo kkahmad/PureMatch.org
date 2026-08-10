@@ -1018,8 +1018,24 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         if (target) {
             target.scrollIntoView({ behavior: 'smooth' });
         }
+        const navLinks = document.querySelector('.nav-links');
+        const navToggle = document.querySelector('.nav-toggle');
+        if (navLinks?.classList.contains('open')) {
+            navLinks.classList.remove('open');
+            navToggle?.setAttribute('aria-expanded', 'false');
+        }
     });
 });// JavaScript Document
+
+const navToggle = document.querySelector('.nav-toggle');
+const navLinks = document.querySelector('.nav-links');
+if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', String(isOpen));
+        navToggle.classList.toggle('active', isOpen);
+    });
+}
 
 // WhatsApp popup behavior — initialize after DOM ready so elements exist
 document.addEventListener('DOMContentLoaded', () => {
