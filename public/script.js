@@ -43,6 +43,14 @@ function showMessage(message, isError = false) {
     authMessage.style.color = isError ? '#b42318' : '#7a3442';
 }
 
+function showHTMLMessage(message, isError = false) {
+    if (!authMessage) return;
+    authMessage.innerHTML = message;
+    authMessage.style.display = 'block';
+    authMessage.style.background = isError ? '#fdecea' : '#fdf3f5';
+    authMessage.style.color = isError ? '#b42318' : '#7a3442';
+}
+
 function showAdminMessage(message, isError = false) {
     if (!adminMessage) return;
     adminMessage.textContent = message;
@@ -166,7 +174,9 @@ async function handleAuthSubmit(form, endpoint) {
                 currentUser = null;
                 updateAuthNavState();
                 form.reset();
-                showSignupSuccessMessage();
+                const signupSuccessMessage = 'Assalamu Alaikum! Your account has been created successfully. Please <a href="/signin" class="auth-page-link">sign in</a> and complete your profile.';
+                sessionStorage.setItem('purematchSignupSuccessMessage', signupSuccessMessage);
+                window.location.href = '/signin';
                 return;
             }
 
@@ -818,6 +828,14 @@ if (adminProfileView) {
 
 restoreSession();
 updateAuthNavState();
+
+if (isDedicatedAuthPage) {
+    const savedSuccessMessage = sessionStorage.getItem('purematchSignupSuccessMessage');
+    if (savedSuccessMessage) {
+        showHTMLMessage(savedSuccessMessage);
+        sessionStorage.removeItem('purematchSignupSuccessMessage');
+    }
+}
 
 if (adminAuthToken && window.location.pathname === '/admin') {
     updateAuthNavState();
